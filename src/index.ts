@@ -1,1 +1,3 @@
-console.log("hello we are here to build a product");
+import { expressConnector } from "./infrastructure/http/express.infra";
+
+expressConnector();
