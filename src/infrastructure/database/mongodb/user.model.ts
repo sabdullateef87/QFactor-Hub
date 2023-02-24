@@ -6,10 +6,12 @@ const userSchema = new mongoose.Schema<IUser>({
   password: { type: String, required: true }
 }, { timestamps: true })
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   var user = this;
-  const hashedPassword = await hashString(user.password);
-  user.password = hashedPassword;
+  if (user.isNew) {
+    const hashedPassword = await hashString(user.password);
+    user.password = hashedPassword;
+  }
   next()
 });
 
