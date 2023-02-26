@@ -1,7 +1,6 @@
 export default class User implements IUser{
   email: string;
   password: string;
-  private emailRegex = "";
 
   constructor(email: string, password: string) {
     this.email = email;

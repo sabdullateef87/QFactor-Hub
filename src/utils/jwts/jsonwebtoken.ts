@@ -9,5 +9,4 @@ export const generateToken = (payload: Object, options: SignOptions = {}): strin
 export const vertfyToken = (token: string, jwtSecret: string, SignOptions = {})  => {
   const isValid = jwt.verify(token, jwtSecret, SignOptions);
   return isValid;
-  
 }

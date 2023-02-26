@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
-import { hashString } from "../../encryption/bcrypt.enc";
+import { compareHashedStringToPlainText, hashString } from "../../encryption/bcrypt.enc";
 
 const userSchema = new mongoose.Schema<IUser>({
   email: { type: String, required: true, unique: true },
@@ -14,6 +14,13 @@ userSchema.pre('save', async function (next) {
   }
   next()
 });
+
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
+  const user = this;
+  return compareHashedStringToPlainText(candidatePassword, user.password).catch((e) => false);
+};
 
 const UserModel = mongoose.model<IUser>("User", userSchema);
 export default UserModel;

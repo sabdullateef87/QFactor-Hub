@@ -2,29 +2,28 @@ import mongoose from "mongoose";
 import UserModel from "../user.model";
 import IUserRepo from "../../../../domain/repositories/user.repository";
 import User from "../../../../domain/entities/User";
+import NoRecordFoundException from '../../../../Exception/NoRecordFoundException';
+import { Status } from "../../../../utils/constants";
 
 export default class UserRepoMongo implements IUserRepo {
 
-  async createUser(input: IUser): Promise<void> {
-
-    console.log("In user repo mongo")
+  async createUser(input: IUser): Promise<User> {
     const isExist = await UserModel.findOne({ email: input.email });
     if (isExist) throw new Error(`User with email : ${input.email} already exists`)
 
-    console.log(isExist)
     const newUser = new UserModel(input);
     await newUser.save();
+    return new User(input.email, "");
   }
-  getUser(email: string): Promise<User> {
-    throw new Error("Method not implemented.");
-  }
-  getAllUsers(): Promise<User[]> {
-    throw new Error("Method not implemented.");
-  }
-
-
-  testingUserServiceMongoRepo() {
-    return "Testing user repo mongo"
+  async findUserByEmail(email: string): Promise<User | null> {
+    const user = await UserModel.findOne({ email })
+    if (!user) return null
+    let foundUser = new User(user.email, user.password);
+    return foundUser;
   }
 
+  async findAllUsers(): Promise<User[]> {
+    let users = await UserModel.find();
+    return users.map(user => new User(user.email, user.password));
+  }
 }
