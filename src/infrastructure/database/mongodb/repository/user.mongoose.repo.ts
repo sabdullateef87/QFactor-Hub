@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import UserModel from "../user.model";
+import UserModel, { userSchema } from "../user.model";
 import IUserRepo from "../../../../domain/repositories/user.repository";
 import User from "../../../../domain/entities/User";
 import NoRecordFoundException from '../../../../Exception/NoRecordFoundException';

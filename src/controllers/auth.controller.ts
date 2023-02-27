@@ -10,8 +10,12 @@ export default class AuthController {
     this.createUserHandler = this.createUserHandler.bind(this)
   }
 
-  loginHandler(req: any, res: any) {
+  async loginHandler(req: any, res: any) {
+    const { email, password } = req.body;
+    const user = new User(email, password);
+    const token = await this._authService.login(user);
 
+    return new MWResponse(`logged in `, token);
   }
   async createUserHandler(req: any, res: any) {
     try {

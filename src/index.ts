@@ -1,3 +1,5 @@
-import { expressConnector } from "./infrastructure/http/express.infra";
+import { expressConnector, app } from "./infrastructure/http/express.infra";
 
 expressConnector();
+
+export default app;
