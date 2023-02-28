@@ -1,14 +1,15 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
+import config from "config";
 
-
+const saltRound = config.get<number>("SALT_ROUND")
 const hashString = async (plainText: string): Promise<string> => {
-
-  const hashedString = await bcrypt.hash(plainText, 10);
+  const salt = await bcrypt.genSalt(10);
+  const hashedString = await bcrypt.hash(plainText, salt);
   return hashedString;
 }
 
-const compare = async (plainText: string, hashedString: string): Promise<boolean> => {
-  const isEqual = bcrypt.compare(plainText, hashString)
+const compare = async (plainText: string, hashedString: string): Promise<Boolean> => {
+  const isEqual = await bcrypt.compare(plainText, hashedString)
   return isEqual;
 }
 

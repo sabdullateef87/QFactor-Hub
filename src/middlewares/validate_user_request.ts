@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express"
 import { isCreateUserDtoValidated } from '../utils/validators/user/index';
 import { createUserSchema } from "../utils/validators/user/user.schema";
 import ValidationException from '../Exception/ValidationException';
-import { HTTP, ResponseCode, Status } from "../utils/constants";
+import { HttpResponseCode, ResponseCode, Status } from "../utils/constants";
 
 
 export const validateCreateUserRequest = (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +23,7 @@ export const validateCreateUserBody = (req: Request, res: Response, next: NextFu
     if (isValid.error) {
       const errorMessage = isValid.error.message;
       let error = new ValidationException(errorMessage, ResponseCode.BAD_REQUEST, Status.FAILURE);
-      return res.status(HTTP.BAD_REQUEST).json(error);
+      return res.status(HttpResponseCode.BAD_REQUEST).json(error);
     }
     next();
   } catch (error) {

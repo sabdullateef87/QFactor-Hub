@@ -4,6 +4,7 @@ import IUserRepo from "../../../../domain/repositories/user.repository";
 import User from "../../../../domain/entities/User";
 import NoRecordFoundException from '../../../../Exception/NoRecordFoundException';
 import { Status } from "../../../../utils/constants";
+import { IUser } from "../../../../domain/interfaces/user.interface";
 
 export default class UserRepoMongo implements IUserRepo {
 

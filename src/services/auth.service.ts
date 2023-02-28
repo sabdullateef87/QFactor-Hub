@@ -34,7 +34,7 @@ export class AuthService {
     const isExists = await this._userRepo.findUserByEmail(email);
     if (isExists) throw new BaseException("User already exist", ResponseCode.DUPLICATE_RECORD, Status.FAILURE);
 
-    const newUser = { email, password };
+    const newUser = new User(email, password);
     const user = await this._userRepo.createUser(newUser);
     return user;
 

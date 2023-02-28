@@ -8,4 +8,8 @@ export default class UserController {
   createUserHandler(req: any, res: any) {
     return this._userService.createUser(req.body)
   }
+
+  sayHello(req: any, res: any){
+    return "helooooooo";
+  }
 }
