@@ -3,7 +3,7 @@ import config from "config";
 
 const saltRound = config.get<number>("SALT_ROUND")
 const hashString = async (plainText: string): Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(saltRound);
   const hashedString = await bcrypt.hash(plainText, salt);
   return hashedString;
 }

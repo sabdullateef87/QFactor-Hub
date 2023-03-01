@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import config from "config";
 
 import logger from "../../utils/logger";
-import connect from "../database/mongodb/mongo.connect";
+import connect from "../../config/mongo.connect";
 import userRouter from "../routers/express.router";
 
 const PORT = 4041;

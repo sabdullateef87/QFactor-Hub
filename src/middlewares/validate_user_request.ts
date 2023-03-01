@@ -1,7 +1,8 @@
+import ValidationException from '../exceptions/ValidationException';
+
 import { Request, Response, NextFunction } from "express"
-import { isCreateUserDtoValidated } from '../utils/validators/user/index';
-import { createUserSchema } from "../utils/validators/user/user.schema";
-import ValidationException from '../Exception/ValidationException';
+import { isCreateUserDtoValidated } from '../validators/user/index';
+import { createUserSchema } from '../dtos/user.dto';
 import { HttpResponseCode, ResponseCode, Status } from "../utils/constants";
 
 

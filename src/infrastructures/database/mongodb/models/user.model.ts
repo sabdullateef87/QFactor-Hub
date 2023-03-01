@@ -1,11 +1,12 @@
 import mongoose, { Schema, model } from "mongoose";
-import { compare, hashString } from "../../encryption/bcrypt.enc";
-import { IUser, Role } from "../../../domain/interfaces/user.interface";
+import { compare, hashString } from "../../../encryption/bcrypt.enc";
+import { IUser, Role } from "../../../../domain/interfaces/user.interface";
 
 export const userSchema = new mongoose.Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, enum: Role, default: "USER" }
+  role: { type: String, enum: Role, default: "USER" },
+  permissions: [{ type: String }]
 }, { timestamps: true })
 
 userSchema.pre('save', async function (next) {
@@ -16,6 +17,7 @@ userSchema.pre('save', async function (next) {
   }
   if (user.isNew) {
     const hashedPassword = await hashString(user.password);
+    user.permissions?.push("CAN_VIEW")
     user.password = hashedPassword;
   }
   next()

@@ -1,11 +1,12 @@
 import { Response, Request, NextFunction } from "express"
-import BaseException from '../Exception/BaseException';
+import BaseException from '../exceptions/BaseException';
 import { HttpResponseCode, Status } from "../utils/constants";
-import { verifyToken } from "../utils/jwts/jsonwebtoken";
+import { verifyToken } from "../utils/jsonwebtoken";
 import config from "config";
 import { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import logger from '../utils/logger';
 import IUserRepo from '../domain/repositories/user.repository';
+import User from '../domain/entities/user';
 
 const jwtSecret = config.get<string>("JWT_SECRET");
 
@@ -28,13 +29,14 @@ export const extractAuthenticatedUser = (repo: IUserRepo) => async (req: Request
 
     if (isTokenValid.email === null) return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("Unauthorized", HttpResponseCode.UNAUTHORIZED, Status.FAILURE));
 
-    const user = await repo.findUserByEmail(isTokenValid.email);
+    const exclude = ["password"];
+    const user = await repo.findUserByEmail(isTokenValid.email, exclude);
 
     if (isTokenValid.email) {
       if (!user) return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("User does not exist !", HttpResponseCode.UNAUTHORIZED, Status.FAILURE));
     }
 
-    res.locals.user = user?.email;
+    res.locals.user = user;
 
     return next();
   } catch (error) {
@@ -51,7 +53,6 @@ export const extractAuthenticatedUser = (repo: IUserRepo) => async (req: Request
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = res.locals.user;
-    console.log(user);
     if (!user) {
       return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("Unauthorized", HttpResponseCode.UNAUTHORIZED, Status.FAILURE))
     }
@@ -62,6 +63,10 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 }
 
 
-export const checkPermissions = async (req: Request, res: Response, next: NextFunction) => {
+export const restrictTo = (...allowedRoles: string[]) => (req: Request, res: Response, next: NextFunction) => {
   const user = res.locals.user;
-}
+  if (!allowedRoles.includes(user.role)) {
+    return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("Access denied", HttpResponseCode.UNAUTHORIZED, Status.FAILURE))
+  }
+  next();
+};

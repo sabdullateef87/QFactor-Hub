@@ -1,4 +1,4 @@
-import { ICreateUserDto } from "../../../dtos/user.dto";
+import { ICreateUserDto } from "../../dtos/user.dto";
 
 export const isCreateUserDtoValidated = (user: ICreateUserDto): boolean => {
   const { email, password } = user;

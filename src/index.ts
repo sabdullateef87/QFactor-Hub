@@ -1,4 +1,4 @@
-import { expressConnector, app } from "./infrastructure/http/express.infra";
+import { expressConnector, app } from "./infrastructures/http/express.infra";
 
 expressConnector();
 

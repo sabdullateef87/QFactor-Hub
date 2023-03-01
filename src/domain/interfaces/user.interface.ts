@@ -1,8 +1,8 @@
 export interface IUser {
   email: string;
   password: string;
-  role: string;
-  comparePassword?: (userPassword: string) => Promise<Boolean>
+  role?: string;
+  permissions?: string[],
 }
 
 export enum Role {

@@ -1,7 +1,7 @@
 export default class BaseException extends Error {
-  constructor(public message: string, public code: number, public status: string) {
+  constructor(public message: string, public httpCode: number, public status: string) {
     super();
-    this.code = code;
+    this.httpCode = httpCode;
     this.status = status;
     this.message = message;
   }

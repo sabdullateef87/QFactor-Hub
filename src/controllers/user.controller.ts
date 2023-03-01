@@ -9,7 +9,7 @@ export default class UserController {
     return this._userService.createUser(req.body)
   }
 
-  sayHello(req: any, res: any){
-    return "helooooooo";
+  sayHello(req: any, res: any) {
+    return { name: "adeiza", surname: "Ajay" };
   }
 }
