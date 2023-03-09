@@ -26,6 +26,6 @@ export default class UserRepoMongo implements IUserRepo {
 
   async findAllUsers(): Promise<User[]> {
     let users = await UserModel.find();
-    return users.map(user => new User(user.email, user.password));
+    return users.map(user => new User(user.email, "", user?.role, user?.permissions));
   }
 }

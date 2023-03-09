@@ -3,6 +3,8 @@ export interface IUser {
   password: string;
   role?: string;
   permissions?: string[],
+  isActive?: boolean,
+  isVerified?: boolean
 }
 
 export enum Role {

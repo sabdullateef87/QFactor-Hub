@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import config from "config";
-
-import logger from '../utils/logger';
+import { logger,path } from "../utils/logger";
+const Logger = logger(path.dirname(__filename) + "/" + path.basename(__filename));
 
 
 const connect = async () => {
@@ -9,10 +9,10 @@ const connect = async () => {
     const URI: string = config.get<string>("DB_URI");
     mongoose.set('strictQuery', true);
     mongoose.connect(URI, () => {
-      logger.info("Successfully connected to mongodb database server");
+      Logger.info("Successfully connected to mongodb database server");
     })
   } catch (error) {
-    logger.error(error);
+    Logger.error(error);
   }
 }
 

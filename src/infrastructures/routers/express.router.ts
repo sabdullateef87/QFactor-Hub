@@ -20,6 +20,10 @@ const authController = new AuthController(authService);
 router.post("/create", [validateCreateUserRequest, validateCreateUserBody], ExpressAdapter(newUserController.createUserHandler))
 router.post("/register", [validateCreateUserBody], ExpressAdapter(authController.createUserHandler))
 router.post("/login", ExpressAdapter(authController.loginHandler))
+router.get("/all", ExpressAdapter(newUserController.getAllUser));
+router.get("/verify", ExpressAdapter(authController.verifyAccountDetails))
+
 router.post("/any", [extractAuthenticatedUser(mongoDB), authenticate, restrictTo('USER')], ExpressAdapter(newUserController.sayHello));
+
 
 export default router;

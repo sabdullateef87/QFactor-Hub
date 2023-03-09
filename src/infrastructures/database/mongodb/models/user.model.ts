@@ -6,7 +6,9 @@ export const userSchema = new mongoose.Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: Role, default: "USER" },
-  permissions: [{ type: String }]
+  permissions: [{ type: String }],
+  isActive: { type: Boolean, default: false },
+  isVerified: { type: Boolean, default: false }
 }, { timestamps: true })
 
 userSchema.pre('save', async function (next) {

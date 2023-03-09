@@ -9,7 +9,11 @@ export default class UserService {
     return await this._userRepo.createUser(input)
   }
 
-  
+  async getAllUsers() {
+    return await this._userRepo.findAllUsers();
+  }
+
+
 
   // update user permission - can be done by user
 }

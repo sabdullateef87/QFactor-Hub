@@ -4,10 +4,10 @@ import { HttpResponseCode, Status } from "../utils/constants";
 import { verifyToken } from "../utils/jsonwebtoken";
 import config from "config";
 import { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
-import logger from '../utils/logger';
+import { logger, path } from "../utils/logger";
 import IUserRepo from '../domain/repositories/user.repository';
-import User from '../domain/entities/user';
 
+const Logger = logger(path.dirname(__filename) + "/" + path.basename(__filename));
 const jwtSecret = config.get<string>("JWT_SECRET");
 
 export const extractAuthenticatedUser = (repo: IUserRepo) => async (req: Request, res: Response, next: NextFunction) => {
@@ -40,7 +40,7 @@ export const extractAuthenticatedUser = (repo: IUserRepo) => async (req: Request
 
     return next();
   } catch (error) {
-    logger.error(`Error => ${error}`)
+    Logger.error(`Error => ${error}`)
 
     if (error instanceof JsonWebTokenError) {
       return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("Unauthorized", HttpResponseCode.UNAUTHORIZED, Status.FAILURE))
