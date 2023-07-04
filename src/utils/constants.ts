@@ -17,6 +17,7 @@ export enum ResponseCode {
   NOT_FOUND = 25,
   DUPLICATE_RECORD = 4,
   UNAUTHORIZED = 63,
+  SECURITY_REASON = 63,
   INTERNAL_SERVER_ERROR = 91
 }
 

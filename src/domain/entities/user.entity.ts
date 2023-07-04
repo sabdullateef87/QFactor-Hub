@@ -16,12 +16,22 @@ export default class User implements IUser {
     this.isActive = isActive;
     this.isVerified = isVerified
   }
-  comparePassword?: ((userPassword: string) => Promise<Boolean>) | undefined;
 
-  public getEmail(): string {
-    return this.email;
+  public omitFields<T, K extends keyof T>(obj: T, fields: K[]): Omit<T, K> {
+    const clonedObj = { ...obj };
+    fields.forEach((field) => {
+      delete clonedObj[field];
+    });
+    return clonedObj;
   }
-  public getPassword(): string {
-    return this.password;
+
+  public getUser(){
+    return Object.freeze({
+      email: this.email,
+      role: this.role,
+      permissions: this.permissions,
+      isActive: this.isActive,
+      isVerified: this.isVerified
+    })
   }
 }

@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
 import UserModel, { userSchema } from "../models/user.model";
 import IUserRepo from "../../../../domain/repositories/user.repository";
-import User from "../../../../domain/entities/User";
-
+import User from "../../../../domain/entities/user.entity";
+import BaseResponse from '../../../../dtos/response.dto';
+import { HttpResponseCode, Status } from "../../../../utils/constants";
 
 export default class UserRepoMongo implements IUserRepo {
 
@@ -20,12 +20,30 @@ export default class UserRepoMongo implements IUserRepo {
     const user = await UserModel.findOne({ email }).select(exclude);
 
     if (!user) return null
-    let foundUser = new User(user.email, user.password, user.role, user.permissions);
+    let foundUser = new User(user.email, user.password, user?.role, user?.permissions);
     return foundUser;
   }
 
-  async findAllUsers(): Promise<User[]> {
+  async findAllUsers(): Promise<User[] | any> {
     let users = await UserModel.find();
-    return users.map(user => new User(user.email, "", user?.role, user?.permissions));
+    return users.map(user => {
+      let newUser = new User(user.email, user.password, user?.role, user?.permissions, user?.isActive, user.isVerified);
+      // return newUser.omitFields(newUser, ['password']);
+      return newUser.getUser();
+    });
+  }
+
+  async updateUserDetails(filters: any, data: any) {
+    // TODO: implement update user data based on queries.
+    return null;
+  }
+
+  async handleVerification(email: string): Promise<any> {
+    const user = await UserModel.findOne({ email: email }) as User;
+    if (user.isVerified) {
+      return new BaseResponse("User has been previously verified, and will be redirected to the homepage", 200, "")
+    }
+    await UserModel.findOneAndUpdate({ email: email }, { isVerified: true }, { new: true })
+    return new BaseResponse("User verification successfull", HttpResponseCode.SUCCESS_OK, Status.SUCCESS);
   }
 }

@@ -1,0 +1,27 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const controllers_1 = require("../../controllers");
+const user_service_1 = __importDefault(require("../../services/user.service"));
+const express_adapter_1 = __importDefault(require("../../adapters/httpAdapter/express.adapter"));
+const user_mongoose_repo_1 = __importDefault(require("../database/mongodb/repository/user.mongoose.repo"));
+const validate_user_request_1 = require("../../middlewares/validate_user_request");
+const authorization_1 = require("../../middlewares/authorization");
+const auth_controller_1 = __importDefault(require("../../controllers/auth.controller"));
+const auth_service_1 = require("../../services/auth.service");
+const router = express_1.default.Router();
+const mongoDB = new user_mongoose_repo_1.default();
+const userService = new user_service_1.default(mongoDB);
+const authService = new auth_service_1.AuthService(mongoDB);
+const newUserController = new controllers_1.UserController(userService);
+const authController = new auth_controller_1.default(authService);
+router.post("/create", [validate_user_request_1.validateCreateUserRequest, validate_user_request_1.validateCreateUserBody], (0, express_adapter_1.default)(newUserController.createUserHandler));
+router.post("/register", [validate_user_request_1.validateCreateUserBody], (0, express_adapter_1.default)(authController.createUserHandler));
+router.post("/login", (0, express_adapter_1.default)(authController.loginHandler));
+router.get("/all", (0, express_adapter_1.default)(newUserController.getAllUser));
+router.get("/verify", (0, express_adapter_1.default)(authController.verifyAccountDetails));
+router.post("/any", [(0, authorization_1.extractAuthenticatedUser)(mongoDB), authorization_1.authenticate, (0, authorization_1.restrictTo)('USER')], (0, express_adapter_1.default)(newUserController.sayHello));
+exports.default = router;

@@ -9,7 +9,6 @@ export let transporter = nodemailer.createTransport({
     }
 });
 
-
 interface EmailOptions {
     to: string;
     subject: string;

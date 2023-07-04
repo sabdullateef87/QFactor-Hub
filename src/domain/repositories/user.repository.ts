@@ -1,6 +1,7 @@
-import User from "../entities/user";
+import User from "../entities/user.entity";
 export default interface IUserRepo {
   createUser(input: User): Promise<User>;
   findUserByEmail(email: string, excludeFields: string[]): Promise<User | null>;
-  findAllUsers(): Promise<User[]>
+  findAllUsers(): Promise<User[]>;
+  handleVerification(email: string): Promise<void>;
 }
