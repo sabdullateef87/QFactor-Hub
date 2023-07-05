@@ -3,9 +3,9 @@ import IUserRepo from "../../../../domain/repositories/user.repository";
 import User from "../../../../domain/entities/user.entity";
 import BaseResponse from '../../../../dtos/response.dto';
 import { HttpResponseCode, Status } from "../../../../utils/constants";
+import BaseException from "../../../../exceptions/BaseException";
 
 export default class UserRepoMongo implements IUserRepo {
-
   async createUser(input: User): Promise<User> {
     const isExist = await UserModel.findOne({ email: input.email });
     if (isExist) throw new Error(`User with email : ${input.email} already exists`)
@@ -45,5 +45,25 @@ export default class UserRepoMongo implements IUserRepo {
     }
     await UserModel.findOneAndUpdate({ email: email }, { isVerified: true }, { new: true })
     return new BaseResponse("User verification successfull", HttpResponseCode.SUCCESS_OK, Status.SUCCESS);
+  }
+
+  async assignRoleToUser(email: string, role: string): Promise<any> {
+    try {
+      const user = await this.findByEmail(email);
+      return await UserModel.findOneAndUpdate({ email: user.email }, { role: role }, { new: true, fields: { password: 0 } });
+    } catch (error) {
+      console.log(error);
+      return new BaseException("Role Update Failed", HttpResponseCode.INTERNAL_SERVER_ERROR, Status.FAILURE);
+    }
+
+  }
+  assingPermissionsToUser(email: string, permissions: string[]): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  private async findByEmail(email: string): Promise<User> {
+    const user = await UserModel.findOne({ email }) as User;
+    if (!user) throw new BaseException("User not found", HttpResponseCode.NOT_FOUND, Status.FAILURE);
+    return user;
   }
 }

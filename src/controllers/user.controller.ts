@@ -1,5 +1,8 @@
+import { Request, Response } from 'express';
+
 import User from '../domain/entities/user.entity';
 import BaseResponse from '../dtos/response.dto';
+import { updateRoleUserSchema } from '../dtos/user.dto';
 import BaseException from '../exceptions/BaseException';
 import UserService from '../services/user.service';
 import { HttpResponseCode, Status } from '../utils/constants';
@@ -10,6 +13,7 @@ export default class UserController {
   constructor(private readonly _userService: UserService) {
     this.createUserHandler = this.createUserHandler.bind(this);
     this.getAllUser = this.getAllUser.bind(this);
+    this.assignRoleToUserController = this.assignRoleToUserController.bind(this);
   }
 
   async createUserHandler(req: any, res: any) {
@@ -17,12 +21,21 @@ export default class UserController {
   }
 
   async getAllUser() {
-
     try {
       let users = await this._userService.getAllUsers();
       return new BaseResponse("", HttpResponseCode.SUCCESS_OK, users, Status.SUCCESS);
     } catch (error) {
       return new BaseException("", HttpResponseCode.INTERNAL_SERVER_ERROR, Status.FAILURE);
     }
+  }
+
+  async assignRoleToUserController(req: Request, res: Response) {
+    const isValid = updateRoleUserSchema.validate(req.body);
+    if (isValid.error){
+      const errorMessage = isValid.error.message;
+      return new BaseException(errorMessage, HttpResponseCode.BAD_REQUEST, Status.FAILURE);
+    } 
+    const { email, role } = req.body;
+    return this._userService.assignRoleToUser(email, role);
   }
 }

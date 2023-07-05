@@ -14,7 +14,7 @@ export const extractAuthenticatedUser = (repo: IUserRepo) => async (req: Request
   try {
     let access_token;
     if (req.headers.authorization !== null) {
-      if (req.headers.authorization?.startsWith("BEARER")) {
+      if (req.headers.authorization?.startsWith("Bearer")) {
         access_token = req.headers.authorization.split(" ")[1];
       }
     }
@@ -53,6 +53,7 @@ export const extractAuthenticatedUser = (repo: IUserRepo) => async (req: Request
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = res.locals.user;
+    Logger.info(user);
     if (!user) {
       return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("Unauthorized", HttpResponseCode.UNAUTHORIZED, Status.FAILURE))
     }
@@ -66,6 +67,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 export const restrictTo = (...allowedRoles: string[]) => (req: Request, res: Response, next: NextFunction) => {
   const user = res.locals.user;
   if (!allowedRoles.includes(user.role)) {
+    Logger.error("Access Denied");
     return res.status(HttpResponseCode.UNAUTHORIZED).json(new BaseException("Access denied", HttpResponseCode.UNAUTHORIZED, Status.FAILURE))
   }
   next();

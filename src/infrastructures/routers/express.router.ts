@@ -24,7 +24,7 @@ router.post("/login", ExpressAdapter(authController.loginController))
 router.get("/verify", ExpressAdapter(authController.verifyAccountDetails))
 router.get("/all", ExpressAdapter(newUserController.getAllUser));
 
-
+router.put("/role", [extractAuthenticatedUser(mongoDB) , authenticate, restrictTo('ADMIN')], ExpressAdapter(newUserController.assignRoleToUserController));
 // router.post("/any", [extractAuthenticatedUser(mongoDB), authenticate, restrictTo('USER')], ExpressAdapter(newUserController.sayHello));
 
 

@@ -8,7 +8,8 @@ export const userSchema = new mongoose.Schema<IUser>({
   role: { type: String, enum: Role, default: "USER" },
   permissions: [{ type: String }],
   isActive: { type: Boolean, default: false },
-  isVerified: { type: Boolean, default: false }
+  isVerified: { type: Boolean, default: false },
+  createdAt: {type: Date, default: Date.now()}
 }, { timestamps: true })
 
 userSchema.pre('save', async function (next) {

@@ -9,8 +9,12 @@ export default class UserService {
     return await this._userRepo.createUser(input)
   }
 
-  async getAllUsers() : Promise<User[]> {
+  async getAllUsers(): Promise<User[]> {
     return await this._userRepo.findAllUsers();
+  }
+
+  async assignRoleToUser(email: string, role: string) {
+    return await this._userRepo.assignRoleToUser(email, role);
   }
 
   // update user permission - can be done by user
