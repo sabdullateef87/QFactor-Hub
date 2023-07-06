@@ -14,7 +14,7 @@ import SecurityException from "../exceptions/SecurityException";
 
 const jwtSecret = config.get<string>("JWT_SECRET");
 const Logger = logger(path.dirname(__filename) + "/" + path.basename(__filename));
-const baseUrl = config.get<string>("BASE_URL");
+const baseUrl = config.get<string>("BASE_URL") || "hrllo";
 
 export class AuthService {
   constructor(private readonly _userRepo: IUserRepo) { }

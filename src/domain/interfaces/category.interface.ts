@@ -1,4 +1,6 @@
 export interface ICategory {
     name: string;
-    description: string
+    description: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

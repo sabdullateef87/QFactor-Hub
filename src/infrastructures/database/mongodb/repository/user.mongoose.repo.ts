@@ -58,6 +58,7 @@ export default class UserRepoMongo implements IUserRepo {
 
   }
   assingPermissionsToUser(email: string, permissions: string[]): Promise<any> {
+    // TODO :  Implement this 
     throw new Error("Method not implemented.");
   }
 

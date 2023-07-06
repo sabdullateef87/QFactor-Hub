@@ -8,24 +8,31 @@ import { validateCreateUserBody } from '../../middlewares/validate_user_request'
 import { restrictTo, authenticate, extractAuthenticatedUser } from "../../middlewares/authorization";
 import AuthController from '../../controllers/auth.controller';
 import { AuthService } from '../../services/auth.service';
+import CategoryController from "../../controllers/category.controller";
+import { CategoryMongoRepo } from "../database/mongodb/repository/category.mongoose.repo";
+import CategoryService from "../../services/category.service";
 
-const router = express.Router();
+const userRouter = express.Router();
+const categoryRouter = express.Router();
 
-const mongoDB = new UserRepoMongo();
-const userService = new UserService(mongoDB);
-const authService = new AuthService(mongoDB);
-
+const userMongoDB = new UserRepoMongo();
+const userService = new UserService(userMongoDB);
+const authService = new AuthService(userMongoDB);
 const newUserController = new UserController(userService);
 const authController = new AuthController(authService);
 
-// creating user endpoints - (auth endpoints)
-router.post("/create", [validateCreateUserBody], ExpressAdapter(authController.createUserController));
-router.post("/login", ExpressAdapter(authController.loginController))
-router.get("/verify", ExpressAdapter(authController.verifyAccountDetails))
-router.get("/all", ExpressAdapter(newUserController.getAllUser));
+const categoryMongDB = new CategoryMongoRepo()
+const categoryService = new CategoryService(categoryMongDB);
+const categoryController = new CategoryController(categoryService);
 
-router.put("/role", [extractAuthenticatedUser(mongoDB) , authenticate, restrictTo('ADMIN')], ExpressAdapter(newUserController.assignRoleToUserController));
-// router.post("/any", [extractAuthenticatedUser(mongoDB), authenticate, restrictTo('USER')], ExpressAdapter(newUserController.sayHello));
+//user endpoints - (auth endpoints)
+userRouter.post("/create", [validateCreateUserBody], ExpressAdapter(authController.createUserController));
+userRouter.post("/login", ExpressAdapter(authController.loginController))
+userRouter.get("/verify", ExpressAdapter(authController.verifyAccountDetails))
+userRouter.get("/all", ExpressAdapter(newUserController.getAllUsersController));
+userRouter.put("/role", [extractAuthenticatedUser(userMongoDB) , authenticate, restrictTo('ADMIN', 'SUPERUSER')], ExpressAdapter(newUserController.assignRoleToUserController));
 
+//category endpoints 
+categoryRouter.post("/create", ExpressAdapter(categoryController.createCategoryController));
 
-export default router;
+export { userRouter , categoryRouter};

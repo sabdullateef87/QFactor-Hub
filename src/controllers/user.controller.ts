@@ -11,16 +11,16 @@ const Logger = logger(path.dirname(__filename) + "/" + path.basename(__filename)
 
 export default class UserController {
   constructor(private readonly _userService: UserService) {
-    this.createUserHandler = this.createUserHandler.bind(this);
-    this.getAllUser = this.getAllUser.bind(this);
+    this.createUserController = this.createUserController.bind(this);
+    this.getAllUsersController = this.getAllUsersController.bind(this);
     this.assignRoleToUserController = this.assignRoleToUserController.bind(this);
   }
 
-  async createUserHandler(req: any, res: any) {
+  async createUserController(req: any, res: any) {
     return await this._userService.createUser(req.body)
   }
 
-  async getAllUser() {
+  async getAllUsersController() {
     try {
       let users = await this._userService.getAllUsers();
       return new BaseResponse("", HttpResponseCode.SUCCESS_OK, users, Status.SUCCESS);
